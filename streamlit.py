@@ -37,7 +37,7 @@ st.markdown("""
 # Load and preprocess data
 @st.cache_data
 def load_and_preprocess_data():
-    df = pd.read_csv("food_classes_edited_twice.csv", na_values=["<NA>", "nan", "Nill", "Nil"])
+    df = pd.read_csv("./food_classes_edited_twice.csv", na_values=["<NA>", "nan", "Nill", "Nil"])
     df = df.head(25000)  # Use more data if available
     
     # Data Preprocessing
