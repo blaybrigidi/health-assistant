@@ -58,3 +58,6 @@ To host the application on a local server, follow these steps:
   * streamlit.py: Streamlit script for the web application.
   * my_recommendation_model.keras: Saved Keras model.
   * requirements.txt: List of dependencies required for the project.
+
+# Link to YouTube Video
+  https://youtu.be/coqVOloEukg
