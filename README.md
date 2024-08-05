@@ -40,7 +40,7 @@ The recommendation system leverages various machine learning algorithms and tech
   * Select "Download ZIP".
 2. Extract the ZIP file to a desired location on your system.
 3. Open a command line or terminal window and navigate to the extracted directory:
-~code: cd path/to/extracted/directory
+~code: cd path/to/extracted/directory (the file path of the folder
       pip install streamlit
 * pip install pandas
 * pip install numpy
