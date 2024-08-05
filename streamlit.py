@@ -12,7 +12,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 # Set page config
-st.set_page_config(page_title="Health Intelligent Virtual Shopping Assistant", page_icon="🍽️", layout="wide")
+st.set_page_config(page_title="🍽️ Health Intelligent Virtual Shopping Assistant", page_icon="🍽️", layout="wide")
 
 # Custom CSS to improve the app's appearance
 st.markdown("""
@@ -154,7 +154,7 @@ def search_items(query, items):
 
 # Streamlit app
 def main():
-    st.title("🍽️ Smart Food Recommender")
+    st.title("🍽️ Health Intelligent Virtual Shopping Assistant")
 
     df, nova_mapping = load_and_preprocess_data()
     rules = perform_market_basket_analysis(df)
