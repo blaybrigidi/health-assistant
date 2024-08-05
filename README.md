@@ -1,6 +1,6 @@
 # AI_final
 
-# Intelligent Virtual Shopping Assistant - Recommendation System 
+# Health Intelligent Virtual Shopping Assistant - Recommendation System 
 For our project, we built and deployed a recommendation system using a combination of machine learning techniques and a pre-trained BERT model for embedding generation. The system recommends items based on a given item ID and a budget constraint, utilizing a custom-built deep learning model.
 
 # Table of Contents
