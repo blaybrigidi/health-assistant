@@ -41,6 +41,17 @@ The recommendation system leverages various machine learning algorithms and tech
 2. Extract the ZIP file to a desired location on your system.
 3. Open a command line or terminal window and navigate to the extracted directory:
 ~code: cd path/to/extracted/directory
+      pip install streamlit
+pip install pandas
+pip install numpy
+pip install scikit-learn
+pip install mlxtend
+pip install tensorflow
+pip install scipy
+pip install plotly
+pip install wordcloud
+pip install matplotlib
+
 4. Running the Application
 Run the Jupyter Notebook for data preprocessing and model training:
 ~code: jupyter notebook runstream.ipynb
