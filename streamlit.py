@@ -12,7 +12,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 # Set page config
-st.set_page_config(page_title="Smart Food Recommender", page_icon="🍽️", layout="wide")
+st.set_page_config(page_title="Health Intelligent Virtual Shopping Assistant", page_icon="🍽️", layout="wide")
 
 # Custom CSS to improve the app's appearance
 st.markdown("""
