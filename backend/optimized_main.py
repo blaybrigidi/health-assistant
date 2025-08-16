@@ -47,11 +47,22 @@ class SearchResponse(BaseModel):
 def load_optimized_data():
     global df, items_cache
     try:
-        data_path = "../food_classes_edited_twice.csv"
-        if not os.path.exists(data_path):
-            data_path = "./food_classes_edited_twice.csv"
-        if not os.path.exists(data_path):
-            data_path = "./sample_data.csv"  # Fallback for deployment
+        # Try multiple paths for the CSV file
+        possible_paths = [
+            "./sample_data.csv",  # Railway deployment
+            "../food_classes_edited_twice.csv",  # Local development
+            "./food_classes_edited_twice.csv",   # Alternative local
+            "/app/sample_data.csv"  # Docker container path
+        ]
+        
+        data_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                data_path = path
+                break
+        
+        if data_path is None:
+            raise FileNotFoundError("No CSV file found. Available files: " + str(os.listdir(".")))
         
         print("🔄 Loading dataset with optimizations...")
         
