@@ -1,6 +1,5 @@
-# Large data files
+# Large data files - keep sample_data.csv for deployment
 food_classes_edited_twice.csv
-*.csv
 *.keras
 *.model
 
@@ -29,3 +28,7 @@ build/
 .idea/
 *.swp
 *.swo
+
+# Temporary files
+*.tmp
+*.temp
