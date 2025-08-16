@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Shopping Assistant</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #2563eb, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .search-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .budget-slider {
+            margin: 1rem 0;
+        }
+        .budget-slider input {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        .items-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .item {
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .item:hover {
+            background: rgba(37, 99, 235, 0.3);
+            transform: translateX(8px);
+        }
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: linear-gradient(45deg, #2563eb, #10b981);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const API_BASE_URL = 'http://localhost:8000';
+
+        function App() {
+            const [view, setView] = useState('search');
+            const [items, setItems] = useState([]);
+            const [filteredItems, setFilteredItems] = useState([]);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [budget, setBudget] = useState(500);
+            const [selectedItem, setSelectedItem] = useState(null);
+            const [recommendations, setRecommendations] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [status, setStatus] = useState('');
+
+            useEffect(() => {
+                fetchItems();
+            }, []);
+
+            useEffect(() => {
+                if (searchQuery) {
+                    const filtered = items.filter(item => 
+                        item.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                    setFilteredItems(filtered.slice(0, 20));
+                } else {
+                    setFilteredItems(items.slice(0, 20));
+                }
+            }, [searchQuery, items]);
+
+            const fetchItems = async () => {
+                try {
+                    setStatus('Loading items from your CSV dataset...');
+                    const response = await fetch(`${API_BASE_URL}/items`);
+                    const data = await response.json();
+                    setItems(data.items);
+                    setFilteredItems(data.items.slice(0, 20));
+                    setStatus(`✅ Loaded ${data.items.length} real food items!`);
+                } catch (error) {
+                    setStatus('❌ Backend not running. Make sure to start: ./start-optimized-backend.sh');
+                }
+            };
+
+            const getRecommendations = async (itemId) => {
+                setLoading(true);
+                try {
+                    setStatus(`Getting AI recommendations for "${itemId}"...`);
+                    const response = await fetch(`${API_BASE_URL}/recommendations`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ item_id: itemId, budget: budget, top_n: 5 })
+                    });
+                    const data = await response.json();
+                    setRecommendations(data.recommendations);
+                    setStatus(`✅ Found ${data.recommendations.length} recommendations within $${budget} budget!`);
+                } catch (error) {
+                    setStatus('❌ Error getting recommendations');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const selectItem = (item) => {
+                setSelectedItem(item);
+                getRecommendations(item);
+                setView('recommendations');
+            };
+
+            return (
+                <div className="container">
+                    <div className="hero">
+                        <h1>🥗 AI Health Shopping Assistant</h1>
+                        <p>Powered by your real CSV dataset with 2,505+ food items</p>
+                    </div>
+
+                    {status && <div className="status">{status}</div>}
+
+                    {view === 'search' && (
+                        <div className="search-container">
+                            <h2>Search for Food Items</h2>
+                            <input 
+                                type="text"
+                                className="search-input"
+                                placeholder="Search for food items (e.g., 'milk', 'bread', 'chicken')..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            
+                            <div className="budget-slider">
+                                <label>Budget: ${budget}</label>
+                                <input 
+                                    type="range" 
+                                    min="10" 
+                                    max="1000" 
+                                    value={budget}
+                                    onChange={(e) => setBudget(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="items-list">
+                                {filteredItems.length > 0 ? (
+                                    filteredItems.map((item, index) => (
+                                        <div 
+                                            key={index} 
+                                            className="item"
+                                            onClick={() => selectItem(item)}
+                                        >
+                                            {item}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div>No items found. Try searching for "milk" or "bread"</div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {view === 'recommendations' && (
+                        <div>
+                            <button 
+                                className="btn" 
+                                onClick={() => setView('search')}
+                                style={{marginBottom: '2rem'}}
+                            >
+                                ← Back to Search
+                            </button>
+                            
+                            <h2>Recommendations for: {selectedItem}</h2>
+                            
+                            {loading && <div>🤖 AI is analyzing your preferences...</div>}
+                            
+                            <div className="recommendations">
+                                {recommendations.map((rec, index) => (
+                                    <div key={index} className="recommendation-card">
+                                        <h3>{rec.item}</h3>
+                                        <p><strong>Price:</strong> ${rec.price}</p>
+                                        <p><strong>Health Score:</strong> {rec.health_score}/3.0</p>
+                                        <p><strong>Classification:</strong> {rec.nova_class}</p>
+                                        <p><strong>Relevance:</strong> {rec.relevance}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

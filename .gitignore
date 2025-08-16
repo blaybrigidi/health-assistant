@@ -1,0 +1,31 @@
+# Large data files
+food_classes_edited_twice.csv
+*.csv
+*.keras
+*.model
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.env
+.venv
+
+# Node
+node_modules/
+npm-debug.log*
+build/
+.DS_Store
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
