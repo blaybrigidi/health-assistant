@@ -3,7 +3,7 @@
 # Health Intelligent Virtual Shopping Assistant - Recommendation System 
 For our project, we built and deployed a recommendation system using a combination of machine learning techniques and a pre-trained BERT model for embedding generation. The system recommends items based on a given item ID and a budget constraint, utilizing a custom-built deep learning model.
 
-Demo Link : https://blays-health-assistant.netlify.app/
+Try it out :) @ https://blays-health-assistant.netlify.app/
 # Table of Contents
 * Overview
 * Features
